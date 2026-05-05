@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do list</title>
+<script>
+let listeTaches=[
+  {"idTache": 1,"titreTache": "Faire devoir HTML/CSS","dateCreation":"2026-02-10","dateLimite": "2026-02-25","idStatut": 2,"idPriorite": 1,"idDifficulte": 1,"idType": 3,"note":"se servir des ressources"},
+  
+  {"idTache": 2,"titreTache": "Faire les courses","dateCreation":"2026-02-10","dateLimite": "2026-02-24","idStatut": 1,"idPriorite": 2,"idDifficulte": 1,"idType": 1,"note":""},
+  
+  {"idTache": 3,"titreTache": "Preparer les repas","dateCreation":"2026-02-10","dateLimite": "2026-02-23","idStatut": 3,"idPriorite": 1,"idDifficulte": 2,"idType": 1,"note":""},
+  
+  {"idTache": 4,"titreTache": "Reviser cours JSON","dateCreation":"2026-02-10","dateLimite": "2026-02-25","idStatut": 2,"idPriorite": 2,"idDifficulte": 5,"idType": 3,"note":"se servir de git"},
+  
+  {"idTache": 5,"titreTache": "Faire le ménage","dateCreation":"2026-02-15","dateLimite": "2026-02-28","idStatut": 1,"idPriorite": 3,"idDifficulte": 2,"idType": 1,"note":""},
+  
+  {"idTache": 6,"titreTache": "Repondre offre d'emploi","dateCreation":"2026-02-25","dateLimite": "2026-02-28","idStatut": 4,"idPriorite": 3,"idDifficulte": 3,"idType": 2,"note":""},
+  
+  {"idTache": 7,"titreTache": "Payer le loyer","dateCreation":"2026-02-05","dateLimite": "2026-03-05","idStatut": 1,"idPriorite": 4,"idDifficulte": 1,"idType": 1,"note":"faire chéque"},
+  
+  {"idTache": 8,"titreTache": "Faire footing","dateCreation":"2026-01-22","dateLimite": "2026-02-27","idStatut": 2,"idPriorite": 4,"idDifficulte": 1,"idType": 1,"note":""},
+  
+  {"idTache": 9,"titreTache": "Laver la voiture","dateCreation":"2026-02-15","dateLimite": "2026-03-10","idStatut": 1,"idPriorite": 4,"idDifficulte": 1,"idType": 1,"note":""},
+  
+  {"idTache": 10,"titreTache": "Faire exercice JS","dateCreation":"2026-02-20","dateLimite": "2026-02-27","idStatut": 2,"idPriorite": 2,"idDifficulte": 4,"idType": 3,"note":""}
+]//fin listeTaches
+console.log(listeTaches);
+
+let listeStatut=[
+  {"idStatut": 1,"statut": "A faire"},
+  {"idStatut": 2,"statut": "En cours"},
+  {"idStatut": 3,"statut": "Terminé"},
+  {"idStatut": 4,"statut": "En attente"}
+]//fin listeStatuts
+console.log(listeStatut);
+
+let listePriorite=[
+  {"idPriorite": 1,"priorite": "Urgent", "color": "red"},
+  {"idPriorite": 2,"priorite": "Trés importante", "color": "darkOrange"},
+  {"idPriorite": 3,"priorite": "Important", "color": "yellow"},
+  {"idPriorite": 4,"priorite": "Moyen", "color": "pink"},
+  {"idPriorite": 5,"priorite": "Faible", "color": "green"}
+]//fin listePriorites
+console.log(listePriorite);
+
+let niveauDifficulte=[
+  {"idDifficulte": 1,"difficulte": "Trés facile"},
+  {"idDifficulte": 2,"difficulte": "Facile"},
+  {"idDifficulte": 3,"difficulte": "Moyen"},
+  {"idDifficulte": 4,"difficulte": "Difficile"},
+  {"idDifficulte": 5,"difficulte": "Trés difficile"}
+]//fin listeDifficultes     
+console.log(niveauDifficulte);
+
+let listeType=[
+    {"idType": 1,"type": "Personnel"},
+    {"idType": 2,"type": "Professionnel"},
+    {"idType": 3,"type": "Formation"}
+]//fin listeTypes
+console.log(listeType);
+
+/*
+document.onreadystatechange=function(){
+    if(document.readyState=="complete"){
+        displaylisteTaches();
+}}//permet d'attendre chargement de la page
+*/
+
+// --- Fonction pour remplir un menu déroulant ---
+
+function remplirSelect(idMenu, liste, champId, champTexte) {
+
+  var menu = document.getElementById(idMenu);
+
+  // Option par défaut
+  menu.innerHTML = '<option value="" disabled selected hidden>Faire un choix</option>';
+
+  // On parcourt le tableau JSON
+  for (var i = 0; i < liste.length; i++) {
+    menu.innerHTML += '<option value="' + liste[i][champId] + '">'
+                    + liste[i][champTexte]
+                    + '</option>';
+  }
+}
+
+// --- Remplissage des 4 menus au chargement de la page ---
+
+window.onload = function() {
+  remplirSelect("idType", listeType, "idType", "type");
+  remplirSelect("idStatut", listeStatut, "idStatut", "statut");
+  remplirSelect("idPriorite", listePriorite, "idPriorite", "priorite");
+  remplirSelect("idDifficulte", niveauDifficulte, "idDifficulte", "difficulte");
+};
+
+// Définition de la clé et de la liste par défaut
+const STORAGE_KEY = 'listeTaches';
+
+
+// Fonction qui relit ce qui est stocke
+function getOrLoadList() {
+  const valeurStockee = localStorage.getItem(STORAGE_KEY);// on lit ce qui est stocke
+    if (valeurStockee === null) {
+        return listeTaches; //si rien est stocke on prend la liste du code
+    }
+
+    try {
+        let liste = JSON.parse(valeurStockee);//on transforme le texte en tableau js
+
+        if (!Array.isArray(liste)) {
+            return listeTaches;//si ce n'est pas un tableau on n'accepte pas et on reprend liste du code
+        }
+
+        return liste;
+    } catch (e) {
+        console.error("Erreur de lecture du localStorage :", e);
+        return listeTaches;//si json.parse casse on prend la liste par defaut le (e) represente l'erreur attrape
+    }
+}
+
+// Utilisation
+const maListe = getOrLoadList();
+
+// Si la liste n'existait pas, on la sauvegarde maintenant
+if (!localStorage.getItem(STORAGE_KEY)) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(maListe));
+}
+
+console.log("Liste chargée :", maListe);    
+
+let enregistrement=[];
+
+function saveTache(){
+
+    enregistrement = getOrLoadList();// permet de recuperer la liste ds enregistrement
+
+        let formulaire = document.getElementById('toDoListForm');// verification si formulaire valide
+        if (!formulaire.checkValidity()) {
+        formulaire.reportValidity();
+        return;
+        }
+
+
+var theListeTaches=document.getElementById('titreTache').value;         //
+var theDateCreation=document.getElementById('dateCreation').value;      //
+var theDateLimite=document.getElementById('dateLimite').value;          //
+var theIdPriorite=document.getElementById('idPriorite').value;          // bloc lecture du champs de formulaire
+var theIdStatut=document.getElementById('idStatut').value;              //et on stocke le reseultata ds une variable
+var theIdType=document.getElementById('idType').value;                  //
+var theIdDifficulte=document.getElementById('idDifficulte').value;      //
+var theNote=document.getElementById('note').value;                      //
+console.log(theListeTaches, theDateCreation, theDateLimite, theIdPriorite, theIdStatut, theIdType, theIdDifficulte, theNote)
+
+var NouvelId=enregistrement.length+1;//combien de taches enregistre et on ajoute un
+
+var newTaches={"idTache":NouvelId, "titreTache":theListeTaches,"dateCreation":theDateCreation,"dateLimite":theDateLimite,
+ "idPriorite":theIdPriorite, "idStatut": theIdStatut, "idType":theIdType, "idDifficulte": theIdDifficulte,
+ "note": theNote
+};//bloc creation de l'objet tache
+console.log(newTaches)
+
+enregistrement.push(newTaches);//on push new taches ds enregistrement
+
+let nouvelleListe=JSON.stringify(enregistrement);//on converti le tableau taches en chaine json
+localStorage.setItem('listeTaches',nouvelleListe);// on renregistre la chaine json ds la local storage avec la cle "liste taches"
+
+document.getElementById('toDoListForm').reset();
+
+//permet d'appeler la function d'affichage pour ne pas recharger quand ajout nouvelle taches
+afficherListeTaches(enregistrement) 
+
+}//fin function save tache
+
+
+document.onreadystatechange=function(){
+    if(document.readyState=="complete"){
+        afficherListeTaches(maListe);
+}}//permet d'attendre chargement de la page
+
+//permet l'ffichage du titre tache en html
+function afficherListeTaches(enregistrement) {
+    //  Cibler l'element HTML ou afficher la liste
+    const container = document.getElementById('tableauTaches');
+    
+    //  Vider le contenu precedent (optionnel)
+    container.innerHTML = '';
+
+    //  Parcourir le tableau de taches et generer le HTML
+    enregistrement.forEach(function(tache) {
+        if (tache.idStatut == 3) {
+     return;
+        }// fonction pour ne pas afficher les taches termine mais on les garde ds le local storage
+        // recuperation des differents id pour les mettre ds le tableau html
+        let searchedtheIdStatut=tache.idStatut;
+        let searchedstatut=listeStatut.find(ElementStatut => ElementStatut.idStatut==searchedtheIdStatut).statut;
+
+        let searchedtheIdPriorite=tache.idPriorite;
+        let searchedPriorite=listePriorite.find(ElementPriorite => ElementPriorite.idPriorite==searchedtheIdPriorite).priorite;
+        let searchedColor=listePriorite.find(ElementColor => ElementColor.idPriorite==searchedtheIdPriorite).color;
+
+        let searchedtheIdDifficulte=tache.idDifficulte;
+        let searchedDifficulte=niveauDifficulte.find(ElementNiveauDifficulte => ElementNiveauDifficulte.idDifficulte==searchedtheIdDifficulte).difficulte;
+        
+        let searchedtheIdType=tache.idType;
+        let searchedType=listeType.find(ElementType => ElementType.idType==searchedtheIdType).type;
+        
+        // Creation du tableau HTML pour chaque tache 
+        //  modification du statut avec des boutons 
+        // on les deactive "disabled" quand c'est le meme statut
+        // data-label pour affiche les titres en responsive
+        const htmlTache = `<tr style = "background-color:${searchedColor}"><td data-label="Titre">${tache.titreTache}</td><td data-label="Date création">${tache.dateCreation}</td><td data-label="Date limite">${tache.dateLimite}</td>
+            <td data-label="Priorité">${searchedPriorite}</td><td data-label="Difficulté">${searchedDifficulte}</td><td data-label="Type">${searchedType}</td><td data-label="Note">${tache.note}</td>
+            <td data-label="Statut"><button class="statut" type="button" onclick="changeId(${tache.idTache}, 4)" ${tache.idStatut == 4 ? "disabled" : ""}>En attente</button>
+            <button class="statut" type="button" onclick="changeId(${tache.idTache}, 1)" ${tache.idStatut == 1 ? "disabled" : ""}>A faire</button>
+            <button class="statut" type="button" onclick="changeId(${tache.idTache}, 2)" ${tache.idStatut == 2 ? "disabled" : ""}>En cours</button>
+            <button class="statut" type="button" onclick="changeId(${tache.idTache}, 3)" ${tache.idStatut == 3 ? "disabled" : ""}>Terminé</button></td></tr>`;
+        
+        // Ajout au conteneur
+        container.insertAdjacentHTML('beforeend', htmlTache);
+    });
+}
+// function changeId(){console.log("tu as cliqué")}   test pour voir si le bouton click
+
+function changeId(idTache, nouveauStatut){
+    enregistrement = getOrLoadList();// quand on a clique lit la liste depui localStorage
+    let searchedTache=enregistrement.find(ElementTache => ElementTache.idTache==idTache);//trouver tache avec ^m id
+    searchedTache.idStatut=nouveauStatut //modifier le statut
+    let nouvelleListe=JSON.stringify(enregistrement);//on converti le tableau taches en chaine json
+    localStorage.setItem('listeTaches',nouvelleListe);// on renregistre la chaine json ds la local storage avec la cle "liste taches"
+    afficherListeTaches(enregistrement)// on reaffiche le tableau
+}//fin function pour changer statut quand on a clique sur bouton
+
+
+
+</script>
+
+<style>
+
+body{
+    background-color: #EAF7D5;
+}
+
+body, input {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1em;
+
+}
+
+
+input[required]:invalid,
+select[required]:invalid {
+   border: 1.5px red solid;
+}
+input[required]:valid,
+select[required]:valid {
+    border: 1.5px green solid;
+}
+
+input, select {
+    margin-bottom: 15px;
+    height: 30px;
+    width: 100%;
+
+}
+
+textarea {
+    resize: vertical;
+    overflow: auto;
+    height: 100px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+form {
+    margin: 10px; 
+}
+
+fieldset{
+    border: 3px solid #2F5D7E; 
+    margin: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #8EDBE8;
+    border-radius: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+    width:100% ;
+    min-height: 80%;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.ligne { grid-column: 1 / -1; }
+
+label{
+    margin-top: 15px;
+    color: white;
+}
+
+legend{
+    text-align: center;
+    color: #2F5D7E;
+}
+
+button {
+    border-radius: 15px;
+    background-color: #2D6CDF;
+    color: white;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    height: 50px;
+    margin: 0 auto;
+}
+     
+
+button:hover {
+  background-color: #1F4FA8;
+}
+
+button.statut {
+    width: 100px;
+    height: auto;
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 2px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+button.statut:hover{
+    background-color: aquamarine;
+}
+
+button.statut:disabled {
+    background-color: gray;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+button.statut:disabled:hover {
+    background-color: gray;
+}
+
+footer, header{
+    text-align: center;
+    background-color: #D9C2A3;
+    margin: auto;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 767px){
+    fieldset{
+    border: 1px solid #2F5D7E; 
+    margin: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #8EDBE8;
+    border-radius: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width:100% ;
+    gap: 10px;
+    flex-direction: column;
+}
+
+button{
+    width: 200px;
+}
+
+input, select {
+    margin-bottom: 10px;
+    height: 20px;
+    width: 100%;
+
+}
+
+textarea {
+    resize: vertical;
+    overflow: auto;
+    height: 50px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+}
+
+
+table {table-layout: auto;width: 90%;border:1.5px solid black;border-collapse: collapse;margin: 0 auto;}	
+th, td {border:1px solid black;}
+
+
+/* on elargi la colonne Note  */
+th:nth-child(7),
+td:nth-child(7) {
+    width: 200px;
+}
+
+/* on elargi la colonne Statut */
+th:nth-child(8),
+td:nth-child(8) {
+    width: 400px;
+    white-space: nowrap;
+}
+
+/*modification du tableau sur tel*/
+@media screen and (max-width: 767px) {
+
+    table, tbody, tr, td {
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid black;
+        padding: 8px;
+    }
+
+    td {
+        border: none;
+        padding: 5px;
+    }
+
+    button.statut {
+        width: auto;
+        margin: 3px;
+    }
+    
+    td::before {
+    content: attr(data-label) " : ";
+    font-weight: bold;
+    display: inline-block;
+    min-width: 110px;
+    }
+}
+
+
+</style>
+
+</head>
+
+<body>
+    
+<header>
+    <h1>Ma to do list rien qu'à moi</h1>
+</header>
+    <div>
+
+
+<form id="toDoListForm">
+    <fieldset>
+        
+        <div class="ligne"><label for="titreTache">Tâche</label><input id="titreTache" type="text" placeholder="quelle est ta nouvelle tâche ?" required></div>
+
+        <div class="groupe"><label for="dateCreation">Date création</label><input type="date" id="dateCreation" name="dateCreation" required></div>
+
+       <div class="groupe"><label for="dateLimite">Date limite</label><input type="date" id="dateLimite" name="dateLimite" required></div> 
+        
+       <div class="groupe"><label for="idPriorite">Priorité</label><select id="idPriorite"></select></div> 
+
+       <div class="groupe"><label for="idStatut">Statut</label><select id="idStatut"></select></div> 
+
+       <div class="groupe"><label for="idType">Type</label><select id="idType"></select></div> 
+
+       <div class="groupe"><label for="idDifficulte">Difficulté</label><select id="idDifficulte"></select></div> 
+
+       <div class="ligne"><label for="note">Note</label> <!--petite zone de texte pour laisser une note-->
+        <textarea id="note" name="note" placeholder="petite note personnelle" maxlength="200"></textarea></div>
+        
+        <div class="ligne"><button class="button" id="btnAjouter" type="button" onclick="saveTache()">Ajouter la tâche</button></div>
+
+</fieldset>
+</form>   
+<table class="tableau">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Date création</th>
+            <th>Date limite</th>
+            <th>Priorité</th>
+            <th>Difficulté</th>
+            <th>Type</th>
+            <th>Note</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody id="tableauTaches">
+     </tbody>
+</table> 
+
+</div>
+
+<footer>
+    <p>&copy;2026 GOILLOT Vincent&Dupuyoo Jean-michel <br>
+    Projet to do list</p>
+</footer>
+</body>
+</html>

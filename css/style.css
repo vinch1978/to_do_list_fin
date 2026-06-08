@@ -1,0 +1,277 @@
+body{
+    background-color: #EAF7D5;
+}
+
+body, input {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1em;
+
+}
+
+summary {
+    margin-left: 5px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 15px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.triage {
+    width: 90%;
+    margin: 10px auto;
+}
+
+/* Quand le menu est ouvert */
+.triage[open] summary {
+    background-color: #2D6CDF;
+    border-radius: 5px 5px 0 0;
+}
+
+/* Bloc du menu ouvert */
+.triage div {
+    background-color: white;
+    border: 1px solid #2D6CDF;
+    border-radius: 0 5px 5px 5px;
+    padding: 10px;
+    width: 220px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Éléments du menu */
+.triage a {
+    display: block;
+    color: black;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.triage a:hover {
+    background-color: #8EDBE8;
+}
+
+input[required]:invalid,
+select[required]:invalid {
+   border: 1.5px red solid;
+}
+input[required]:valid,
+select[required]:valid {
+    border: 1.5px green solid;
+}
+
+input, select {
+    margin-bottom: 15px;
+    height: 30px;
+    width: 100%;
+
+}
+
+textarea {
+    resize: vertical;
+    overflow: auto;
+    height: 100px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+form {
+    margin: 10px; 
+}
+
+fieldset{
+    border: 3px solid #2F5D7E; 
+    margin: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #8EDBE8;
+    border-radius: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+    width:100% ;
+    min-height: 80%;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.ligne { grid-column: 1 / -1; }
+
+label{
+    margin-top: 15px;
+    color: white;
+}
+
+legend{
+    text-align: center;
+    color: #2F5D7E;
+}
+
+button {
+    border-radius: 15px;
+    background-color: #2D6CDF;
+    color: white;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    height: 50px;
+    margin: 0 auto;
+}
+     
+
+button:hover {
+  background-color: #1F4FA8;
+}
+
+button.statut {
+    width: 100px;
+    height: auto;
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 2px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+button.statut:hover{
+    background-color: aquamarine;
+}
+
+button.statut:disabled {
+    background-color: gray;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+button.statut:disabled:hover {
+    background-color: gray;
+}
+
+.graphique {
+    width: 350px;
+    max-width: 90%;
+    height: 350px;
+    margin: 20px auto;
+}
+
+footer, header{
+    text-align: center;
+    background-color: #D9C2A3;
+    margin: auto;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 767px){
+    fieldset{
+    border: 1px solid #2F5D7E; 
+    margin: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #8EDBE8;
+    border-radius: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width:100% ;
+    gap: 10px;
+    flex-direction: column;
+}
+
+button{
+    width: 200px;
+}
+
+input, select {
+    margin-bottom: 10px;
+    height: 20px;
+    width: 100%;
+
+}
+
+textarea {
+    resize: vertical;
+    overflow: auto;
+    height: 50px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.graphique {
+    width: 280px;
+    height: 280px;
+}
+}
+
+
+table {table-layout: auto;width: 90%;border:1.5px solid black;border-collapse: collapse;margin: 0 auto;}	
+th, td {border:1px solid black;}
+
+
+/* on elargi la colonne Note  */
+th:nth-child(9),
+td:nth-child(9) {
+    width: 200px;
+}
+
+/* on elargi la colonne Statut */
+th:nth-child(10),
+td:nth-child(10) {
+    width: auto;
+    white-space: normal;
+}
+
+td[data-label="Statut"] form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+button.statut {
+        width: auto;
+        min-width: 90px;
+        margin: 3px;
+    }
+
+/*modification du tableau sur tel*/
+@media screen and (max-width: 767px) {
+
+    table, tbody, tr, td {
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid black;
+        padding: 8px;
+    }
+
+    td {
+        border: none;
+        padding: 5px;
+    }
+
+    button.statut {
+        width: auto;
+        margin: 3px;
+    }
+    
+    td::before {
+    content: attr(data-label) " : ";
+    font-weight: bold;
+    display: inline-block;
+    min-width: 110px;
+    }
+}
